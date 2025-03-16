@@ -1,4 +1,8 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+  env: {
+    GIT_GPT_KEY: process.env.GIT_GPT_KEY,
+  },
+};
 
 export default nextConfig;
