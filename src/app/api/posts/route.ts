@@ -13,16 +13,15 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const session = await auth();
-  const client = await connectToDB();
-  const { searchParams } = new URL(request.url);
-  const id = searchParams.get("id");
-  const title = searchParams.get("title");
-  const content = searchParams.get("content");
-  const date = searchParams.get("date");
-  const author = searchParams.get("author");
-
   try {
+    const session = await auth();
+    const client = await connectToDB();
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get("id");
+    const title = searchParams.get("title");
+    const content = searchParams.get("content");
+    const date = searchParams.get("date");
+    const author = searchParams.get("author");
     // SQL query to insert a new post
     if (!session) {
       return NextResponse.json(
@@ -30,7 +29,13 @@ export async function POST(request: Request) {
         { status: 401 }
       );
     }
-    const { data: todo, error } = await client
+    if (!client) {
+      return NextResponse.json(
+        { message: "Database connection failed" },
+        { status: 500 }
+      );
+    }
+    await client
       .from("posts")
       .insert({
         id: id,

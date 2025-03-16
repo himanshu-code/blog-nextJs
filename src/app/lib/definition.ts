@@ -4,8 +4,8 @@ export type Post = {
   content: string;
   date: string;
 };
-export type Use = {
-  name: string | undefined | null;
-  email: string;
-  image: string;
+export type User = {
+  name?: string | undefined | null;
+  email?: string | undefined | null;
+  image?: string | undefined | null;
 };

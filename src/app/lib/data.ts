@@ -1,12 +1,14 @@
 import { createClient } from "@supabase/supabase-js";
 import { unstable_noStore as noStore } from "next/cache";
 
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 export async function connectToDB() {
   try {
-    return createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-    );
+    if (!supabaseUrl || !supabaseAnonKey) {
+      throw new Error("Missing Supabase environment variables");
+    }
+    return createClient(supabaseUrl, supabaseAnonKey);
   } catch (Error) {
     console.error("Error connecting to the database", Error);
   }
@@ -28,9 +30,13 @@ export async function connectToDB() {
 //   }
 // }
 
-export async function getPosts(client) {
+export async function getPosts() {
   try {
     noStore();
+    const client = await connectToDB();
+    if (!client) {
+      return [];
+    }
     await new Promise((resolve) => setTimeout(resolve, 3000));
     const data = await client.from("posts").select();
     console.log(data);

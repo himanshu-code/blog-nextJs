@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { Button } from "@/app/ui/components/button";
 import Post from "@/app/ui/components/posts/Post";
-import { connectToDB, getPosts } from "@/app/lib/data";
+import { getPosts } from "@/app/lib/data";
 import { auth } from "../../../../auth.config";
+import { Post as TypePost } from "@/app/lib/definition";
 export default async function Page() {
-  const client = await connectToDB();
-  const _post = await getPosts(client);
+  const _post = await getPosts();
   const session = await auth();
   return (
     <>
@@ -18,7 +18,7 @@ export default async function Page() {
       )}
 
       <h1>Posts</h1>
-      {_post.map((post) => (
+      {_post?.map((post: TypePost) => (
         <Post key={post.id} {...post} />
       ))}
     </>
