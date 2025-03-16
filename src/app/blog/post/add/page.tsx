@@ -32,12 +32,11 @@ export default function Page() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const uuid = uuidv4();
+    const apiUrl = process.env.API_URL;
     fetch(
-      `http://localhost:3000/api/posts?id=${uuid}&title=${
-        formData.title
-      }&author=${user?.name}&content=${content || formData.content}&date=${
-        formData.date
-      }`,
+      `${apiUrl}/posts?id=${uuid}&title=${formData.title}&author=${
+        user?.name
+      }&content=${content || formData.content}&date=${formData.date}`,
       {
         method: "POST",
         headers: {
